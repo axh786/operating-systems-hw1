@@ -1,5 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <vector>
+#include <sstream>
 
 int main(int argc, char* argv[]) {
     // Read first line and make it the size of a dynamic 2d array Eg: 26 7 would be 7 rows and 26 col
@@ -17,8 +20,30 @@ int main(int argc, char* argv[]) {
     std::ifstream file("input1.txt");
     int row, col;
     file >> col >> row;
+    file.ignore();
+    
+    std::cout << "Columns: " << col << std::endl;
+    std::cout << "Rows: " << row << std::endl; // Test row and col input
+    
     int* outputArray = new int[row * col];
 
+    std::string range;
+    std::getline(file, range);
+    std::vector<std::pair<char, std::pair<int, int> > > ranges;
+    std::istringstream ss(range);
+    std::string token;
+    while (std::getline(ss, token, ',')) {
+        char prefix;
+        int x, y;
+        std::istringstream tokenStream(token);
+        tokenStream >> prefix >> x >> y;
+        ranges.emplace_back(prefix, std::make_pair(x, y));
+    }
+
+    for (int i = 0; i < ranges.size(); i++) { // test second line ranges input
+        std::cout << "Ranges and chars: " << ranges[i].first << ", " << ranges[i].second.first << " " << ranges[i].second.second << std::endl;
+    }
 
     file.close();
+    return 0;
 }
