@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
         ranges.emplace_back(prefix, std::make_pair(x, y));
     }
 
-    for (int i = 0; i < ranges.size(); i++) { // test second line ranges input
+    for (int i = 0; i < ranges.size(); i++) { // test second line input ranges input
         std::cout << "Ranges and chars: " << ranges[i].first << ", " << ranges[i].second.first << " " << ranges[i].second.second << std::endl;
     }
 
@@ -52,12 +52,25 @@ int main(int argc, char* argv[]) {
         loc.push_back(num);
     }
 
-    std::cout << "Locations: ";
+    std::cout << "Locations: "; // test third line input integers
     for (int j = 0; j< loc.size(); j++) {
         std::cout << loc[j] << " ";
     }
     std::cout << std::endl;
 
+    
+    std::vector<int> where;
+    std::getline(file, line);
+    std::istringstream ss2(line);
+    while (ss2 >> num) {
+        where.push_back(num);
+    }
+
+    std::cout << "Where: "; // test fourth line input integers
+    for (int k = 0; k< where.size(); k++) {
+        std::cout << where[k] << " ";
+    }
+    std::cout << std::endl;
 
 
     file.close();
