@@ -27,10 +27,10 @@ int main(int argc, char* argv[]) {
     
     int* outputArray = new int[row * col];
 
-    std::string range;
-    std::getline(file, range);
+    std::string line;
+    std::getline(file, line);
     std::vector<std::pair<char, std::pair<int, int> > > ranges;
-    std::istringstream ss(range);
+    std::istringstream ss(line);
     std::string token;
     while (std::getline(ss, token, ',')) {
         char prefix;
@@ -43,6 +43,22 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < ranges.size(); i++) { // test second line ranges input
         std::cout << "Ranges and chars: " << ranges[i].first << ", " << ranges[i].second.first << " " << ranges[i].second.second << std::endl;
     }
+
+    std::vector<int> loc;
+    std::getline(file, line);
+    std::istringstream ss1(line);
+    int num;
+    while (ss1 >> num) {
+        loc.push_back(num);
+    }
+
+    std::cout << "Locations: ";
+    for (int j = 0; j< loc.size(); j++) {
+        std::cout << loc[j] << " ";
+    }
+    std::cout << std::endl;
+
+
 
     file.close();
     return 0;
