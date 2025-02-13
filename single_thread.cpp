@@ -11,6 +11,7 @@ int main(int argc, char* argv[]) {
     //3rd line and 4th line work togther, 3rd line tells us what range of char so 0 4 8 12... means 0-4 do the first 4 index in 4th line
     //Input is a multiline input string
     //TODO get characters to work with integers and letter, current implmentation only works with chars
+    //TODO get ranges working, will not always be a two number range will be things like 0 2 12 14 then another could be 4 6 etc 
     //example input: 
     /*
     26 7
