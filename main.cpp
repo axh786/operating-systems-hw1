@@ -1,16 +1,6 @@
 /*
-Ali Husain
-Dr. Rincon
 COSC 3360: Programming Assignment 1
 14 Feb 2025
-*/
-
-/*
-each thread should have ranges, poiner to matrix initialized in main, and the head datapos
-
-ok so for the 0th iteration (goes up to 6 i< 7) my struct will always contain the ranges, i can load in the full dataPos and then load in
-the pair of ranges in headpos being those only 2 ranges then store that information i decode into a vector? of col size so 26 for the UH
-example
 */
 
 #include <pthread.h>
@@ -18,7 +8,6 @@ example
 #include <unistd.h>
 #include <string>
 #include <vector>
-
 #include <utility>
 #include <sstream>
 
@@ -27,11 +16,34 @@ struct arguments {
     std::vector<int> headPos;
     std::vector<int>& dataPos;
     int index;
-    char** matrix;
+    char** outputMatrix;
 };
 
-void * threadFunction(void *ptr) {
-    
+void * asciiArt(void *void_ptr) {
+   arguments *ptr = (arguments *) void_ptr;
+
+   std::vector<std::pair<char, std::vector<std::pair<int, int> > > >& ranges = ptr->ranges;
+   std::vector<int>& dataPos = ptr->dataPos;
+   int index = ptr->index;
+   char** outputMatrix = ptr->outputMatrix;
+
+   for (int i = ptr->headPos[0]; i < ptr->headPos[1]; i++) {
+        int data = ptr->dataPos[i];
+        for (int j = 0; j < ranges.size(); j++) {
+            char character = ranges[j].first;
+            const std::vector<std::pair<int, int> >& inner_ranges = ranges[j].second;
+            for (int k = 0; k < inner_ranges.size(); k++) {
+                int start = inner_ranges[k].first;
+                int end = inner_ranges[k].second;
+                if (data >= start && data <= end) {
+                    outputMatrix[index][data] = character;
+                    break;
+                }
+                
+            }
+        }
+   }
+
     return NULL;
 }
 
@@ -40,11 +52,11 @@ int main() {
     int col, row;
     std::cin >> col >> row;
     std::cin.ignore();
-    char** matrix = new char*[row];
+    char** outputMatrix = new char*[row];
     
     for (int r = 0; r < row; ++r) { // initalize 2d array
-        matrix[r] = new char[col];
-        std::fill(matrix[r], matrix[r] + col, ' '); // Initialize with spaces
+        outputMatrix[r] = new char[col];
+        std::fill(outputMatrix[r], outputMatrix[r] + col, ' '); // Initialize with spaces
     }
     
     //Reading second line of input from the user
@@ -82,24 +94,26 @@ int main() {
     while (dataStream >> value) {
         dataPos.push_back(value);
     }
-
-    std::vector<int> arg;
+    
+    std::vector<arguments> arg;
     arg.reserve(row);
     for (int i = 0; i < row; i++) {
-        arguments args = {ranges, std::vector<int>(), dataPos, i, matrix};
+        arguments args = {ranges, std::vector<int>(), dataPos, i, outputMatrix};
         if (i == row - 1) {
             args.headPos.push_back(headPos[i]);
-            args.headPos.push_back((int)dataPos.size() -1);
+            args.headPos.push_back((int)dataPos.size());
         }
         else {
             args.headPos.push_back(headPos[i]);
             args.headPos.push_back(headPos[i+1]);
         }
+        arg.push_back(args);
     }
+
 
     pthread_t *tid = new pthread_t[row];
     for (int i = 0; i < row; i++) {        
-        if(pthread_create(&tid[i],nullptr,threadFunction,(void *) &arg.at(i))!= 0) {
+        if(pthread_create(&tid[i],nullptr,asciiArt,(void *) &arg.at(i))!= 0) {
 			std::cerr << "Error creating thread" << std::endl;
 			return 1;
 		}
@@ -109,11 +123,18 @@ int main() {
         pthread_join(tid[j],nullptr);
     }
 
-    //Clean up memory
-    for (int r = 0; r < row; ++r) { 
-        delete[] matrix[r];
+    for (int r = 0; r < row; r++) {
+        for (int c = 0; c < col; c++) {
+            std::cout << outputMatrix[r][c];
+        }
+        std::cout << std::endl;
     }
-    delete[] matrix;
+
+    //deallocate memory
+    for (int r = 0; r < row; ++r) { 
+        delete[] outputMatrix[r];
+    }
+    delete[] outputMatrix;
     delete[] tid;
 
     return 0;
