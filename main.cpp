@@ -11,6 +11,14 @@ COSC 3360: Programming Assignment 1
 #include <string>
 #include <vector>
 
+struct arguments{
+
+};
+
+void * threadFunction(void *ptr) {
+
+}
+
 int main() {
 
 }
