@@ -18,7 +18,7 @@ struct lines { // defining lines struct from data given by input
     std::vector<int> headPos;
     std::vector<int>& dataPos;
     int index;
-    char** outputMatrix; // make changes to matrix when done with figuring out characterplacement
+    char** outputMatrix; // make changes to matrix when done with figuring out character placement
 };
 
 void * asciiArt(void *void_ptr);
@@ -31,7 +31,7 @@ int main() {
     
     for (int r = 0; r < row; ++r) { // initalizing 2d array
         outputMatrix[r] = new char[col];
-        std::fill(outputMatrix[r], outputMatrix[r] + col, ' '); // Initialize with spaces
+        std::fill(outputMatrix[r], outputMatrix[r] + col, ' '); // fill 2d array with spaces before decoding
     }
     
     std::vector<std::pair<char, std::vector<std::pair<int, int> > > > ranges; // vector of chars and vector pairs of ints (the ranges)
@@ -55,25 +55,25 @@ int main() {
     std::istringstream headStream(line);
     int value;
     while (headStream >> value) {
-        headPos.push_back(value);
+        headPos.push_back(value); // head pos values stored in vector
     }
 
     std::vector<int> dataPos; // get all of the data pos from the fourth line of input
     std::getline(std::cin, line);
     std::istringstream dataStream(line);
     while (dataStream >> value) {
-        dataPos.push_back(value);
+        dataPos.push_back(value); // data pos values stored in vector
     }
     
     std::vector<lines> arg; // storing thread in lines vector, each contains refrences to dataPos, and the matrix while having its unique index + head pos
     arg.reserve(row);
     for (int i = 0; i < row; i++) {
         lines args = {ranges, std::vector<int>(), dataPos, i, outputMatrix};
-        if (i == row - 1) { // if statment that essentiall checks if its the last index, when true the range starts off on the last head pos to the last element of dataPos
+        if (i == row - 1) { // if statment that essentially checks if its the last index, when true the range starts off on the last head pos to the last element of dataPos
             args.headPos.push_back(headPos[i]);
             args.headPos.push_back((int)dataPos.size());
         }
-        else {
+        else { 
             args.headPos.push_back(headPos[i]);
             args.headPos.push_back(headPos[i+1]);
         }
@@ -99,8 +99,7 @@ int main() {
         std::cout << std::endl;
     }
 
-    // deallocate memory
-    for (int r = 0; r < row; ++r) { 
+    for (int r = 0; r < row; ++r) { // deallocating memory
         delete[] outputMatrix[r];
     }
     delete[] outputMatrix;
