@@ -80,8 +80,8 @@ int main() {
         arg.push_back(args);
     }
 
-    pthread_t *tid = new pthread_t[row]; // dyanimic array of pthread_t of size of the image height (rows), based off of Dr. Rincon's threading practices
-    for (int i = 0; i < row; i++) {        
+    pthread_t *tid = new pthread_t[row]; // dynamic array of pthread_t of size of the image height (rows), based off of Dr. Rincon's threading practices
+    for (int i = 0; i < row; i++) { // for loop that iterates through the lines in the image (amount of rows)
         if(pthread_create(&tid[i],nullptr,asciiArt,(void *) &arg.at(i))!= 0) {
 			std::cerr << "Error creating thread" << std::endl;
 			return 1;
