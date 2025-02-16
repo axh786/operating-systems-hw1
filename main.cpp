@@ -133,5 +133,5 @@ void * asciiArt(void *void_ptr) { // thread function, based off of Dr. Rincons t
          }
     }
  
-     return NULL;
+    return NULL;
  }
